@@ -1,3 +1,3 @@
 # decision-making
 
-This repo contains the code developed to provide deliberation capability to our robots.
+This repo contains the code developed to provide deliberation capabilities to our robots.
