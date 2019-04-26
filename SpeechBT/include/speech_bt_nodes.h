@@ -19,6 +19,11 @@
 #define SPEECH_BT_NODES_H
 
 #include <behaviortree_cpp/behavior_tree.h>
+#include <yarp/os/Network.h>
+#include <yarp/os/RpcServer.h>
+#include <yarp/os/BufferedPort.h>
+
+using namespace yarp::os;
 
 class CommandIs : public BT::ConditionNode
 {
@@ -79,6 +84,22 @@ public:
     // A node having ports MUST implement this STATIC method
     static BT::PortsList providedPorts();
 
+};
+
+
+class ListenCommand : public BT::SyncActionNode
+{
+public:
+    ListenCommand(const std::string& name, const BT::NodeConfiguration& config);
+
+
+    BT::NodeStatus tick() override;
+
+
+    // A node having ports MUST implement this STATIC method
+    static BT::PortsList providedPorts();
+private:
+    BufferedPort<Bottle> port_;
 };
 
 

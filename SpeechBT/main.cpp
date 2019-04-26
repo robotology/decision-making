@@ -42,6 +42,8 @@ int main()
     factory.registerNodeType<CommandIs>("CommandIs");
     factory.registerNodeType<TakeAt>("TakeAt");
     factory.registerNodeType<ShowObject>("ShowObject");
+    factory.registerNodeType<ListenCommand>("ListenCommand");
+
 
 
 
@@ -51,24 +53,24 @@ int main()
             <root main_tree_to_execute = "MainTree">
             <BehaviorTree ID="MainTree">
             <Sequence name = "root">
+            <ListenCommand   name= "Listen" object_listened="{object}"  location_listened="{location}" command_listened="{current_command}" error_message_port="{message_listen}"/>
             <Fallback name="root">
             <CommandIs   name= "Command is Stop"  target_command="stop" current_command="{current_command}" />
             <Sequence name="seq take">
                 <CommandIs   name= "Command is Take" target_command="take" current_command="{current_command}" />
             <Fallback name="fal take">
-                <TakeAt   object="{object_to_take}" at="{location}" error_message_port="{message_take}"/>
+                <TakeAt   object="{object}" at="{location}" error_message_port="{message_take}"/>
                 <SayText     text="{message_take}" />
             </Fallback>
             </Sequence>
             <Sequence name="seq show">
                 <CommandIs   name= "Command is Show"  target_command="show" current_command="{current_command}" />
             <Fallback name="fal show">
-                <ShowObject   object="{object_to_show}" error_message_port="{message_show}"/>
+                <ShowObject   object="{object}" error_message_port="{message_show}"/>
                 <SayText     text="{message_show}" />
             </Fallback>
             </Sequence>
             </Fallback>
-            <SetBlackboard   output_key="current_command" value="stop" />
             </Sequence>
             </BehaviorTree>
 
@@ -78,11 +80,11 @@ int main()
 
     auto tree = factory.createTreeFromText(xml_text);
     tree.rootBlackboard()->set("error_messages", "" );
-    tree.rootBlackboard()->set("current_command", "show" );
-    tree.rootBlackboard()->set("object_to_take", "table" );
-    tree.rootBlackboard()->set("object_to_show", "table" );
+    tree.rootBlackboard()->set("current_command", "stop" );
+    tree.rootBlackboard()->set("object", "table" );
     tree.rootBlackboard()->set("location", "" );
 
+//    <SetBlackboard   output_key="current_command" value="stop" />
 
 
 
