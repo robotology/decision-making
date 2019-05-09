@@ -23,6 +23,10 @@
 #include <yarp/os/RpcServer.h>
 #include <yarp/os/BufferedPort.h>
 
+#include <yarp/dev/PolyDriver.h> // for navigation
+#include <yarp/dev/INavigation2D.h> // for navigation
+
+
 using namespace yarp::os;
 
 class CommandIs : public BT::ConditionNode
@@ -42,6 +46,9 @@ public:
 
 class SayText : public BT::SyncActionNode
 {
+private:
+    yarp::os::Port text_to_say_port_;
+
 public:
     SayText(const std::string& name, const BT::NodeConfiguration& config);
 
@@ -54,13 +61,30 @@ public:
 
 };
 
-
-
-
 class TakeAt : public BT::SyncActionNode
 {
 public:
     TakeAt(const std::string& name, const BT::NodeConfiguration& config);
+
+
+    BT::NodeStatus tick() override;
+
+
+    // A node having ports MUST implement this STATIC method
+    static BT::PortsList providedPorts();
+
+};
+
+
+class GoTo : public BT::SyncActionNode
+{
+private:
+    yarp::os::Property        navigClientCfg_;
+    yarp::dev::INavigation2D* iNav_ = 0;
+    yarp::dev::PolyDriver ddNavClient_;
+
+public:
+    GoTo(const std::string& name, const BT::NodeConfiguration& config);
 
 
     BT::NodeStatus tick() override;
