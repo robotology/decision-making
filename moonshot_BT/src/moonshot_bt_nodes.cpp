@@ -72,7 +72,7 @@ SayText::SayText(const std::string& name, const BT::NodeConfiguration& config)
     Network yarp;
     auto msg = getInput<std::string>("text");
     std::string port_out_name ="/moonshot/BTSpeech/" + name +"/synthesize:o";
-    std::string port_in_name ="/moonshot/synthesize:i";
+    std::string port_in_name ="/moonshotSpeech/synthesise:i";
 
     text_to_say_port_.open(port_out_name);
     yarp.connect(port_out_name, port_in_name);
@@ -141,7 +141,7 @@ BT::NodeStatus TakeAt::tick()
 
     if (action_ok)
     {
-        std::cout << "Taking "<< msg_object.value() << std::endl;
+        std::cout << "Taking "<< msg_object.value() << " from the " << msg_at.value() << std::endl;
 
         return BT::NodeStatus::SUCCESS;
     }
@@ -180,7 +180,7 @@ BT::NodeStatus ShowObject::tick()
 
 
 
-    std::cout << "Take at failed " << std::endl;
+    std::cout << "Showing "<< msg_object.value() << std::endl;
 
 
     bool action_ok = true;
@@ -330,7 +330,9 @@ ListenCommand::ListenCommand(const std::string& name, const BT::NodeConfiguratio
 {
     Network yarp;
 
-    bool ok = port_.open("/moonshot/BTSpeech/recognise:rpc:i");
+    bool ok = port_.open("/moonshot/BTSpeech/listen:i");
+
+    yarp.connect("/moonshotSpeech/speech:o","/moonshot/BTSpeech/listen:i");
 
 //    if (ok)
 //    {
@@ -373,7 +375,8 @@ if (input!=NULL) {
         setOutput("command_listened", "show" );
 
         std::string location = input->get(1).asString();
-        setOutput("location_listened", location );
+
+        setOutput("object_listened", location );
 
     }
     else if(command.compare("goto") == 0)

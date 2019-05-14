@@ -79,7 +79,7 @@ int main()
             <Sequence name="seq show">
                 <CommandIs   name= "Command is Show"  target_command="show" current_command="{current_command}" />
             <Sequence name="seq2 show">
-            <SayText  name="saygoto"    text="OK! I am going to show you where it is." />
+            <SayText  name="sayshow"    text="OK! I am going to show you where it is." />
             <Fallback name="fal show">
                 <ShowObject   object="{object}" error_message_port="{message_show}"/>
                 <SayText   name="sayshowerror"   text="{message_show}" />
@@ -88,7 +88,7 @@ int main()
             </Sequence>
             </Fallback>
                 <SetBlackboard   output_key="current_command" value="stop" />
-            <SayText name="saydone"    text="Done" />
+
 
             </Sequence>
             </BehaviorTree>
@@ -97,6 +97,8 @@ int main()
             )";
             // clang-format on
 
+
+//            <SayText name="saydone"    text="Done" />
     auto tree = factory.createTreeFromText(xml_text);
     tree.rootBlackboard()->set("error_messages", "" );
     tree.rootBlackboard()->set("current_command", "stop" );
